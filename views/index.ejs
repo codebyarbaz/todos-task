@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link
+      rel="stylesheet"
+      href="/node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="/assets/css/custom.css" />
+  </head>
+  <body ng-app="myApp" ng-controller="mainController">
+    <div class="container my-5">
+      <div class="row mb-5">
+        <div class="col-12">
+          <h3 class="font-weight-bolder">Add Todos</h3>
+        </div>
+        <div class="col-12">
+          <form novalidate name="addTaskForm">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <input
+                    type="text"
+                    name="name"
+                    class="form-control px-3 py-2"
+                    placeholder="Enter task name"
+                    ng-class="{
+                      invalidInput:
+                        (addTaskForm.name.$invalid &&
+                          addTaskForm.name.$dirty &&
+                          addTaskForm.name.$touched) ||
+                        (formSubmitted && addTaskForm.name.$invalid)
+                    }"
+                    required
+                    ng-model="taskName"
+                  />
+                  <p
+                    class="text-danger errorMsg"
+                    ng-if="
+                      (addTaskForm.name.$invalid &&
+                        addTaskForm.name.$dirty &&
+                        addTaskForm.name.$touched) ||
+                      (formSubmitted && addTaskForm.name.$invalid)
+                    "
+                  >
+                    Please enter task name
+                  </p>
+                </div>
+              </div>
+              <div class="col-6">
+                <button
+                  class="btn btn-block btn-success"
+                  type="button"
+                  ng-click="addTask(addTaskForm.$valid);"
+                >
+                  Add Task
+                </button>
+              </div>
+            </div>
+            <div class="row" ng-if="addTaskMsg && addTaskMsg.length">
+              <div class="offset-6"></div>
+              <div class="col-6">
+                <p>{{ addTaskMsg }}</p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12" ng-class="{ 'mb-5': allTasks && allTasks.length }">
+          <div class="row">
+            <div class="col-6">
+              <h3 class="font-weight-bolder">Todos List</h3>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+              <select
+                name="filterTask"
+                id="filterTask"
+                ng-model="filterTasks"
+                class="form-control"
+                ng-change="onFilterChange(filterTasks);"
+              >
+                <option value="">Filter</option>
+                <option value="all">All</option>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" ng-init="getTasks();">
+          <table
+            class="table table-striped"
+            ng-if="allTasks && allTasks.length"
+          >
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Task Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="task in allTasks track by $index">
+                <th scope="row">{{ $index + 1 }}</th>
+                <td>{{ task.name }}</td>
+                <td>{{ task.status }}</td>
+                <td>
+                  <button
+                    ng-if="task.status === 'pending'"
+                    ng-click="markComplete(task._id, $index);"
+                    class="btn btn-success mr-4"
+                    ng-init="task.CTA = 'Mark Complete';"
+                    title="{{ task.CTA }}"
+                  >
+                    {{ task.CTA }}
+                  </button>
+
+                  <button
+                    ng-if="task.status === 'completed'"
+                    class="btn btn-success mr-4"
+                    disabled
+                    title="Completed"
+                  >
+                    Completed
+                  </button>
+
+                  <button
+                    ng-click="deleteTask(task._id, $index);"
+                    class="btn btn-danger"
+                    ng-init="task.CTA_2 = 'Delete';"
+                    title="{{ task.CTA_2 }}"
+                    ng-disabled="task.CTA_2 !== 'Delete'"
+                  >
+                    {{ task.CTA_2 }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-center" ng-if="allTasks && allTasks.length === 0">
+            No tasks found!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules/angular/angular.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/controller/mainController.js"></script>
+    <script src="/assets/js/factory/mainFactory.js"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+.c-pointer {
+  cursor: pointer;
+}
+
+.btn {
+  min-width: 140px;
+}
+
+.invalidInput {
+  border: 1px solid red;
+}
+
+.errorMsg {
+  font-size: 0.875rem;
+}
+
+
+#filterTask{
+  max-width: 200px;
+}
